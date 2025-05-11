@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Discipline;
+use App\Entity\Module;
 use App\Entity\Professor;
 use App\Entity\Student;
 use App\Entity\User;
@@ -53,8 +55,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Usuários', 'users', User::class);
         yield MenuItem::linkToCrud('Professores', 'user', Professor::class);
         yield MenuItem::linkToCrud('Alunos', 'users-group', Student::class);
-        yield MenuItem::linkToCrud('Disciplinas', 'book', Student::class);
-        yield MenuItem::linkToCrud('Módulos', 'books', Student::class);
+        yield MenuItem::linkToCrud('Disciplinas', 'book', Discipline::class);
+        yield MenuItem::linkToCrud('Módulos', 'books', Module::class);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

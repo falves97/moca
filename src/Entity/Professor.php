@@ -19,6 +19,7 @@ class Professor extends User
     public function __construct()
     {
         $this->disciplines = new ArrayCollection();
+        $this->setRoles(['ROLE_PROFESSOR']);
     }
 
     /**
