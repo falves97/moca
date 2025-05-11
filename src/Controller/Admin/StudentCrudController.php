@@ -7,8 +7,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -47,33 +45,21 @@ class StudentCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        return [
-            FormField::addColumn('col-sm-8 col-xxl-6'),
-            TextField::new('firstName', 'Nome')
-                ->onlyOnForms(),
-            TextField::new('lastName', 'Sobrenome')
-                ->onlyOnForms(),
-            TextField::new('fullName', 'Nome Completo')
-                ->hideOnForm(),
-            TextField::new('username', 'Nome de usuário'),
-            EmailField::new('email', 'E-mail'),
-            ChoiceField::new('roles', 'Cargos')
-                ->allowMultipleChoices()
-                ->setChoices([
-                    'Admin' => 'ROLE_ADMIN',
-                    'Professor' => 'ROLE_PROFESSOR',
-                    'Aluno' => 'ROLE_STUDENT',
-                ]),
-            TextField::new('plainPassword')
-                ->setFormType(RepeatedType::class)
-                ->setFormTypeOptions([
-                    'type' => PasswordType::class,
-                    'first_options' => ['label' => 'Senha', 'hash_property_path' => 'password'],
-                    'second_options' => ['label' => 'Repita a Senha'],
-                    'mapped' => false,
-                ])
-                ->onlyOnForms(),
-        ];
+        yield FormField::addColumn('col-sm-8 col-xxl-6');
+        yield TextField::new('firstName', 'Nome');
+        yield TextField::new('lastName', 'Apelido');
+        yield TextField::new('email', 'Email');
+        yield TextField::new('username', 'Usuário');
+        yield TextField::new('plainPassword')
+            ->setFormType(RepeatedType::class)
+            ->setFormTypeOptions([
+                'type' => PasswordType::class,
+                'first_options' => ['label' => 'Senha', 'hash_property_path' => 'password'],
+                'second_options' => ['label' => 'Repita a Senha'],
+                'mapped' => false,
+            ])
+            ->onlyOnForms();
+
     }
 
 }

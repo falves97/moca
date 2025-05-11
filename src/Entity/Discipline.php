@@ -16,13 +16,13 @@ class Discipline
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Name = null;
+    private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Description = null;
+    private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'disciplines')]
-    private ?Professor $Professor = null;
+    private ?Professor $professor = null;
 
     #[ORM\Column(length: 255)]
     private ?string $knowledgeArea = null;
@@ -39,9 +39,16 @@ class Discipline
     #[ORM\OneToMany(targetEntity: Module::class, mappedBy: 'discipline')]
     private Collection $modules;
 
+    /**
+     * @var Collection<int, Student>
+     */
+    #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'disciplines')]
+    private Collection $student;
+
     public function __construct()
     {
         $this->modules = new ArrayCollection();
+        $this->student = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,36 +58,36 @@ class Discipline
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): static
+    public function setName(string $name): static
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
 
     public function getDescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
-    public function setDescription(string $Description): static
+    public function setDescription(string $description): static
     {
-        $this->Description = $Description;
+        $this->description = $description;
 
         return $this;
     }
 
     public function getProfessor(): ?Professor
     {
-        return $this->Professor;
+        return $this->professor;
     }
 
-    public function setProfessor(?Professor $Professor): static
+    public function setProfessor(?Professor $professor): static
     {
-        $this->Professor = $Professor;
+        $this->professor = $professor;
 
         return $this;
     }
@@ -150,4 +157,35 @@ class Discipline
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Student>
+     */
+    public function getStudent(): Collection
+    {
+        return $this->student;
+    }
+
+    public function addStudent(Student $student): static
+    {
+        if (!$this->student->contains($student)) {
+            $this->student->add($student);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): static
+    {
+        $this->student->removeElement($student);
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
+
+
 }
