@@ -54,7 +54,8 @@ class UserCrudController extends AbstractCrudController
                     'second_options' => ['label' => 'Repita a Senha'],
                     'mapped' => false,
                 ])
-                ->onlyOnForms(),
+                ->onlyOnForms()
+                ->setRequired(Crud::PAGE_NEW == $pageName),
         ];
     }
 }

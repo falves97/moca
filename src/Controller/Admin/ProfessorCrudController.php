@@ -8,8 +8,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -28,18 +26,18 @@ class ProfessorCrudController extends AbstractCrudController
         return $crud
             ->setEntityLabelInSingular('Professor')
             ->setEntityLabelInPlural('Professores')
-            ->setSearchFields(['firstName','lastName'])
+            ->setSearchFields(['firstName', 'lastName'])
             ->setDefaultSort(['firstName' => 'ASC'])
             ->setPaginatorPageSize(100)
             ->setPageTitle('index', '%entity_label_plural%')
-            ->setPageTitle('detail', fn(Professor $professor) => (string)$professor->getFullName());
+            ->setPageTitle('detail', fn (Professor $professor) => (string) $professor->getFullName());
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
             ->setPermission(Action::INDEX, 'ROLE_ADMIN')
-            ;
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -57,7 +55,7 @@ class ProfessorCrudController extends AbstractCrudController
                 'second_options' => ['label' => 'Repita a Senha'],
                 'mapped' => false,
             ])
-            ->onlyOnForms();
+            ->onlyOnForms()
+            ->setRequired(Crud::PAGE_NEW == $pageName);
     }
-
 }
