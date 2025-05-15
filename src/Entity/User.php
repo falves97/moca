@@ -63,7 +63,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 100)]
     private ?string $username = null;
 
-    private null $plainPassword;
+    //private null $plainPassword;
+    private ?string $plainPassword = null;
 
     public function getId(): ?int
     {
@@ -179,13 +180,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPlainPassword(): null
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(null $plainPassword): void
+
+    public function setPlainPassword(?string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
     }
+
 }

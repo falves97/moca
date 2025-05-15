@@ -1,0 +1,149 @@
+{% extends ea.hasContext ? ea.templatePath('layout') : '@EasyAdmin/page/login_minimal.html.twig' %}
+
+{% trans_default_domain ea.hasContext ? ea.i18n.translationDomain : (translation_domain is defined ? translation_domain ?? 'messages') %}
+
+{% block body_class 'page-login' %}
+{% block page_title %}Criar nova conta{% endblock %}
+
+{% block head_favicon %}
+    {% if favicon_path|default(false) %}
+        <link rel="shortcut icon" href="{{ favicon_path }}">
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block wrapper_wrapper %}
+    {% set page_title = block('page_title') %}
+    {% set _register_label = 'Registrar' %}
+
+    <div class="login-wrapper" style="margin-block-start: 0px !important;">
+        <header class="main-header">
+
+        </header>
+
+        <div class="logo"></div>
+
+        <section class="content" style="border-radius: 10px">
+            {# Erros gerais do formulário #}
+            {% if registrationForm.vars.errors|length > 0 %}
+                <div class="alert alert-danger mb-3">
+                    {{ form_errors(registrationForm) }}
+                </div>
+            {% endif %}
+
+            {{ form_start(registrationForm, {'attr': {'class': 'registration-form'}}) }}
+
+            {# Campo First Name #}
+            <div class="form-group">
+                {{ form_label(registrationForm.firstName) }}
+                <div class="form-widget">
+                    {{ form_widget(registrationForm.firstName, {
+                        'attr': {
+                            'class': 'form-control' ~ (registrationForm.firstName.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.firstName) }}
+                </div>
+            </div>
+
+            {# Campo Last Name #}
+            <div class="form-group">
+                {{ form_label(registrationForm.lastName) }}
+                <div class="form-widget">
+                    {{ form_widget(registrationForm.lastName, {
+                        'attr': {
+                            'class': 'form-control' ~ (registrationForm.lastName.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.lastName) }}
+                </div>
+            </div>
+
+            {# Campo Email #}
+            <div class="form-group">
+                {{ form_label(registrationForm.email) }}
+                <div class="form-widget">
+                    {{ form_widget(registrationForm.email, {
+                        'attr': {
+                            'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+            </div>
+
+            {# Campo Senha #}
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword.first) }}
+                <div class="form-widget">
+                    {{ form_widget(registrationForm.plainPassword.first, {
+                        'attr': {
+                            'class': 'form-control' ~ (registrationForm.plainPassword.first.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.plainPassword.first) }}
+                </div>
+            </div>
+
+            {# Campo Confirmar Senha #}
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword.second) }}
+                <div class="form-widget">
+                    {{ form_widget(registrationForm.plainPassword.second, {
+                        'attr': {
+                            'class': 'form-control' ~ (registrationForm.plainPassword.second.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.plainPassword.second) }}
+                </div>
+            </div>
+
+
+            <button type="submit" style="height: 40px !important; background-color: #2563eb !important;" class="btn btn-primary btn-lg btn-block form-control">Registrar</button>
+            {{ form_end(registrationForm) }}
+
+            <div class="text-center mt-3">
+                <p style="color: #5b6471;">Já tem uma conta? <a href="{{ path('admin_login') }}" style="color: #6679ec; text-decoration: none; font-weight: bold">Faça login</a></p>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        body {
+            background: #4388F7 !important;
+            background: linear-gradient(313deg, rgba(67, 136, 247, 1) 0%, rgba(111, 170, 250, 1) 50%, rgba(142, 193, 252, 1) 100%) !important;
+        }
+
+        .logo {
+            background-image: url('{{ asset('img/logo.png') }}');
+            background-size: 50%;
+            background-color: #ffffff;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin-bottom: -50px;
+            height: 120px;
+            width: 120px;
+            border-radius: 50%;
+            border: solid 1px #dbdbc8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+
+        a {
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #e0e0e0 !important;
+        }
+    </style>
+{% endblock %}
