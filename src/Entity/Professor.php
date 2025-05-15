@@ -13,7 +13,7 @@ class Professor extends User
     /**
      * @var Collection<int, Discipline>
      */
-    #[ORM\OneToMany(targetEntity: Discipline::class, mappedBy: 'Professor')]
+    #[ORM\OneToMany(targetEntity: Discipline::class, mappedBy: 'professor')]
     private Collection $disciplines;
 
     public function __construct()
@@ -56,6 +56,4 @@ class Professor extends User
     {
         return $this->getFullName();
     }
-
-
 }

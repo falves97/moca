@@ -18,4 +18,8 @@ return [
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
+    Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
+    Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
+    Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
+    EmilePerron\TinymceBundle\TinymceBundle::class => ['all' => true],
 ];

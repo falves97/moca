@@ -13,8 +13,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use Symfony\Component\Asset\Package;
-use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,9 +24,7 @@ class DashboardController extends AbstractDashboardController
 {
     public function __construct(private AssetMapperInterface $assetMapper)
     {
-
     }
-
 
     public function index(): Response
     {
@@ -43,10 +39,12 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         $url = $this->assetMapper->getAsset('img/logo.png')->publicPath;
+
         return Dashboard::new()
             ->setTitle('<div style="text-align: center;"><img height="120" width="100" src="'.$url.'" alt="logo"></div>')
             ->setFaviconPath('img/icone.png')
-            ;
+            ->disableDarkMode()
+        ;
     }
 
     public function configureMenuItems(): iterable

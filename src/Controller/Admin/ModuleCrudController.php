@@ -15,9 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ModuleCrudController extends AbstractCrudController
 {
@@ -35,7 +32,7 @@ class ModuleCrudController extends AbstractCrudController
             ->setDefaultSort(['name' => 'ASC'])
             ->setPaginatorPageSize(100)
             ->setPageTitle('index', '%entity_label_plural%')
-            ->setPageTitle('detail', fn(Module $module) => (string)$module->getName());
+            ->setPageTitle('detail', fn (Module $module) => (string) $module->getName());
     }
 
     public function configureActions(Actions $actions): Actions
@@ -45,7 +42,7 @@ class ModuleCrudController extends AbstractCrudController
             ->setPermission(Action::NEW, 'ROLE_ADMIN')
             ->setPermission(Action::DELETE, 'ROLE_ADMIN')
             ->setPermission(Action::EDIT, 'ROLE_ADMIN')
-            ;
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -60,7 +57,6 @@ class ModuleCrudController extends AbstractCrudController
             ->onlyOnForms();
     }
 
-
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         $query = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
@@ -68,16 +64,14 @@ class ModuleCrudController extends AbstractCrudController
 
         if ($this->isGranted('ROLE_ADMIN')) {
             return $query;
-        }
-        else {
+        } else {
             $query
                 ->innerJoin('entity.discipline', 'discipline')
-                ->leftJoin('discipline.student', 'discipline_student') // Note que usamos 'student' (singular)
+                ->leftJoin('discipline.student', 'discipline_student')
                 ->andWhere('discipline.professor = :user OR discipline_student = :user')
                 ->setParameter('user', $user);
 
             return $query;
         }
     }
-
 }

@@ -5,7 +5,9 @@ namespace App\Entity;
 use App\Repository\DisciplineRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DisciplineRepository::class)]
 class Discipline
@@ -16,21 +18,30 @@ class Discipline
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'disciplines')]
+    #[ORM\ManyToOne(targetEntity: Professor::class, inversedBy: 'disciplines')]
     private ?Professor $professor = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $knowledgeArea = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $year = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $class = null;
 
     /**
@@ -43,12 +54,12 @@ class Discipline
      * @var Collection<int, Student>
      */
     #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'disciplines')]
-    private Collection $student;
+    private Collection $students;
 
     public function __construct()
     {
         $this->modules = new ArrayCollection();
-        $this->student = new ArrayCollection();
+        $this->students = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -161,15 +172,15 @@ class Discipline
     /**
      * @return Collection<int, Student>
      */
-    public function getStudent(): Collection
+    public function getStudents(): Collection
     {
-        return $this->student;
+        return $this->students;
     }
 
     public function addStudent(Student $student): static
     {
-        if (!$this->student->contains($student)) {
-            $this->student->add($student);
+        if (!$this->students->contains($student)) {
+            $this->students->add($student);
         }
 
         return $this;
@@ -177,7 +188,7 @@ class Discipline
 
     public function removeStudent(Student $student): static
     {
-        $this->student->removeElement($student);
+        $this->students->removeElement($student);
 
         return $this;
     }
@@ -186,6 +197,4 @@ class Discipline
     {
         return $this->getName();
     }
-
-
 }
