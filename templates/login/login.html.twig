@@ -46,7 +46,7 @@
 
         </div>
 
-        <section class="content">
+        <section class="content" style="border-radius: 10px">
             {% if error|default(false) %}
                 <div class="w-100 alert alert-danger rounded mb-3">
                     {{ error.messageKey|trans(error.messageData, 'security') }}
@@ -93,7 +93,15 @@
                 {% endif %}
 
                 <button type="submit" style="height: 40px !important; background-color: #2563eb !important;" class="btn btn-primary btn-lg btn-block form-control">{{ _sign_in_label }}</button>
+
+                <div class="text-center mt-4">
+                    <p style="color: #5b6471;">Ainda não tem uma conta? <a href="{{ path('app_register') }}" style="color: #6679ec; text-decoration: none; font-weight: bold">Cadastre-se</a></p>
+                </div>
+
+                <script src="{{ asset('login.js', constant('EasyCorp\\Bundle\\EasyAdminBundle\\Asset\\AssetPackage::PACKAGE_NAME')) }}"></script>
             </form>
+
+
 
             <script src="{{ asset('login.js', constant('EasyCorp\\Bundle\\EasyAdminBundle\\Asset\\AssetPackage::PACKAGE_NAME')) }}"></script>
             {% endblock login_form_wrapper %}
