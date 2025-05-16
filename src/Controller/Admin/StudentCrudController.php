@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -46,6 +47,8 @@ class StudentCrudController extends AbstractCrudController
     {
         return [
             FormField::addColumn('col-sm-8 col-xxl-6'),
+            IdField::new('id')
+                ->hideOnForm(),
             TextField::new('firstName', 'Nome')
                 ->onlyOnForms(),
             TextField::new('lastName', 'Sobrenome')

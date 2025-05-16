@@ -17,6 +17,6 @@ class TextEditorField implements FieldInterface
             ->setLabel($label)
             ->setFormType(TinymceType::class)
             ->setTemplatePath('field/text_editor.html.twig')
-            ->addFormTheme('form/theme.html.twig');
+            ->addFormTheme('@Tinymce/form/tinymce_type.html.twig');
     }
 }

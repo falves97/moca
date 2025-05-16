@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 class DisciplineCrudController extends AbstractCrudController
@@ -50,11 +51,13 @@ class DisciplineCrudController extends AbstractCrudController
     {
         return [
             FormField::addColumn('col-sm-8 col-xxl-8'),
+            IdField::new('id')
+                ->hideOnForm(),
             Field::new('name', 'Nome'),
             TextEditorField::new('description', 'Descrição')
-            ->setFormTypeOptions([
-                'allow_file_upload' => true,
-            ]),
+                ->setFormTypeOptions([
+                    'allow_file_upload' => true,
+                ]),
             Field::new('knowledgeArea', 'Área de Conhecimento'),
             Field::new('class', 'Turma'),
             IntegerField::new('year', 'Ano'),

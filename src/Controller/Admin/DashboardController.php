@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Discipline;
+use App\Entity\Lesson;
 use App\Entity\Module;
 use App\Entity\Professor;
 use App\Entity\Student;
@@ -43,18 +44,20 @@ class DashboardController extends AbstractDashboardController
         return Dashboard::new()
             ->setTitle('<div style="text-align: center;"><img height="120" width="100" src="'.$url.'" alt="logo"></div>')
             ->setFaviconPath('img/icone.png')
-            ->disableDarkMode()
-        ;
+            ->disableDarkMode();
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'dashboard');
-        yield MenuItem::linkToCrud('Usuários', 'users', User::class);
-        yield MenuItem::linkToCrud('Professores', 'user', Professor::class);
-        yield MenuItem::linkToCrud('Alunos', 'users-group', Student::class);
-        yield MenuItem::linkToCrud('Disciplinas', 'book', Discipline::class);
-        yield MenuItem::linkToCrud('Módulos', 'books', Module::class);
+        return [
+            MenuItem::linkToDashboard('Dashboard', 'dashboard'),
+            MenuItem::linkToCrud('Usuários', 'users', User::class),
+            MenuItem::linkToCrud('Professores', 'user', Professor::class),
+            MenuItem::linkToCrud('Alunos', 'users-group', Student::class),
+            MenuItem::linkToCrud('Disciplinas', 'book', Discipline::class),
+            MenuItem::linkToCrud('Módulos', 'books', Module::class),
+            MenuItem::linkToCrud('Lições', 'book', Lesson::class),
+        ];
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

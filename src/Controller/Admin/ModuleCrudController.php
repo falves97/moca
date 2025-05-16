@@ -13,8 +13,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 
 class ModuleCrudController extends AbstractCrudController
 {
@@ -41,20 +43,27 @@ class ModuleCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
             ->setPermission(Action::NEW, 'ROLE_ADMIN')
             ->setPermission(Action::DELETE, 'ROLE_ADMIN')
-            ->setPermission(Action::EDIT, 'ROLE_ADMIN')
-        ;
+            ->setPermission(Action::EDIT, 'ROLE_ADMIN');
     }
 
     public function configureFields(string $pageName): iterable
     {
-        yield FormField::addColumn('col-sm-8 col-xxl-6');
-        yield Field::new('name', 'Nome');
-        yield Field::new('description', 'Descrição')->hideOnIndex();
-        yield AssociationField::new('discipline', 'Disciplina');
-        yield AssociationField::new('discipline', 'Disciplina')
-            ->setCrudController(DisciplineCrudController::class)
-            ->autocomplete()
-            ->onlyOnForms();
+        return [
+            FormField::addColumn('col-sm-8 col-xxl-6'),
+            IdField::new('id')
+                ->hideOnForm(),
+            AssociationField::new('discipline', 'Disciplina')
+                ->autocomplete(),
+            Field::new('name', 'Nome'),
+            Field::new('description', 'Descrição'),
+            CollectionField::new('lessons', 'Lições')
+                ->useEntryCrudForm(LessonCrudController::class)
+                ->addJsFiles(
+                    'bundles/tinymce/ext/tinymce/tinymce.min.js',
+                    'bundles/tinymce/ext/tinymce-webcomponent.js',
+                )
+                ->hideOnIndex(),
+        ];
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
