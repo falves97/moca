@@ -14,7 +14,7 @@ class Professor extends User
      * @var Collection<int, Discipline>
      */
     #[ORM\OneToMany(targetEntity: Discipline::class, mappedBy: 'professor')]
-    private Collection $disciplines;
+    protected Collection $disciplines;
 
     public function __construct()
     {

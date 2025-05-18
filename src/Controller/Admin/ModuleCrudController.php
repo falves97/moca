@@ -49,7 +49,7 @@ class ModuleCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addColumn('col-sm-8 col-xxl-6'),
+            FormField::addColumn('col-12'),
             IdField::new('id')
                 ->hideOnForm(),
             AssociationField::new('discipline', 'Disciplina')

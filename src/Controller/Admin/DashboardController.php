@@ -6,6 +6,7 @@ use App\Entity\Discipline;
 use App\Entity\Lesson;
 use App\Entity\Module;
 use App\Entity\Professor;
+use App\Entity\Quiz;
 use App\Entity\Student;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -55,8 +56,9 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Professores', 'user', Professor::class),
             MenuItem::linkToCrud('Alunos', 'users-group', Student::class),
             MenuItem::linkToCrud('Disciplinas', 'book', Discipline::class),
-            MenuItem::linkToCrud('Módulos', 'books', Module::class),
+            MenuItem::subMenu('Módulos', 'books'),
             MenuItem::linkToCrud('Lições', 'book', Lesson::class),
+            MenuItem::linkToCrud('Questionários', 'book', Quiz::class),
         ];
     }
 

@@ -26,42 +26,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\Length(max: 180)]
-    private ?string $email = null;
+    protected ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    protected array $roles = [];
 
     /**
      * @var string|null The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    protected ?string $password = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 180)]
-    private ?string $firstName = null;
+    protected ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    private ?string $lastName = null;
+    protected ?string $lastName = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
-    private ?string $username = null;
+    protected ?string $username = null;
 
-    private ?string $plainPassword;
+    protected ?string $plainPassword;
 
     public function getId(): ?int
     {

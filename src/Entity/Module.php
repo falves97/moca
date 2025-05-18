@@ -34,9 +34,16 @@ class Module
     #[ORM\OneToMany(targetEntity: Lesson::class, mappedBy: 'module', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $lessons;
 
+    /**
+     * @var Collection<int, Quiz>
+     */
+    #[ORM\OneToMany(targetEntity: Quiz::class, mappedBy: 'module')]
+    private Collection $quizzes;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
+        $this->quizzes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,5 +120,35 @@ class Module
     public function __toString(): string
     {
         return $this->getName().' - '.$this->discipline->getName();
+    }
+
+    /**
+     * @return Collection<int, Quiz>
+     */
+    public function getQuizzes(): Collection
+    {
+        return $this->quizzes;
+    }
+
+    public function addQuiz(Quiz $quiz): static
+    {
+        if (!$this->quizzes->contains($quiz)) {
+            $this->quizzes->add($quiz);
+            $quiz->setModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuiz(Quiz $quiz): static
+    {
+        if ($this->quizzes->removeElement($quiz)) {
+            // set the owning side to null (unless already changed)
+            if ($quiz->getModule() === $this) {
+                $quiz->setModule(null);
+            }
+        }
+
+        return $this;
     }
 }

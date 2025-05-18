@@ -50,14 +50,11 @@ class DisciplineCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addColumn('col-sm-8 col-xxl-8'),
+            FormField::addColumn('col-12'),
             IdField::new('id')
                 ->hideOnForm(),
             Field::new('name', 'Nome'),
-            TextEditorField::new('description', 'Descrição')
-                ->setFormTypeOptions([
-                    'allow_file_upload' => true,
-                ]),
+            TextEditorField::new('description', 'Descrição'),
             Field::new('knowledgeArea', 'Área de Conhecimento'),
             Field::new('class', 'Turma'),
             IntegerField::new('year', 'Ano'),

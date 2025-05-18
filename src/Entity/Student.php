@@ -14,7 +14,7 @@ class Student extends User
      * @var Collection<int, Discipline>
      */
     #[ORM\ManyToMany(targetEntity: Discipline::class, mappedBy: 'students')]
-    private Collection $disciplines;
+    protected Collection $disciplines;
 
     public function __construct()
     {
