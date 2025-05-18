@@ -7,10 +7,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -31,8 +33,15 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addColumn('col-12'),
+            FormField::addColumn(),
             IdField::new('id')
+                ->hideOnForm(),
+            AssociationField::new('avatar', 'Avatar')
+                ->setCrudController(AvatarFileCrudController::class)
+                ->renderAsEmbeddedForm()
+                ->onlyOnForms(),
+            ImageField::new('avatar.name', 'Avatar')
+                ->setBasePath('/upload/images/avatars/')
                 ->hideOnForm(),
             TextField::new('firstName', 'Nome')
                 ->onlyOnForms(),
@@ -49,11 +58,15 @@ class UserCrudController extends AbstractCrudController
                     'Professor' => 'ROLE_PROFESSOR',
                     'Aluno' => 'ROLE_STUDENT',
                 ]),
+            FormField::addRow(),
             TextField::new('plainPassword')
                 ->setFormType(RepeatedType::class)
                 ->setFormTypeOptions([
                     'type' => PasswordType::class,
-                    'first_options' => ['label' => 'Senha', 'hash_property_path' => 'password'],
+                    'first_options' => [
+                        'label' => 'Senha',
+                        'hash_property_path' => 'password',
+                    ],
                     'second_options' => ['label' => 'Repita a Senha'],
                     'mapped' => false,
                 ])

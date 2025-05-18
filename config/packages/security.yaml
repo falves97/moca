@@ -5,24 +5,43 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        app_professor_provider:
             entity:
-                class: App\Entity\User
+                class: App\Entity\Professor
+        
+        app_student_provider:
+            entity:
+                class: App\Entity\Student
+    
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        
+        admin:
+            pattern: ^/admin
             lazy: true
-            provider: app_user_provider
+            provider: app_professor_provider
             form_login:
                 login_path: 'admin_login'
                 check_path: 'admin_login'
                 enable_csrf: true
+
+            logout:
+                path: 'app_logout'
+                
+        main:
+            pattern: ^/
+            lazy: true
+            provider: app_student_provider
+            form_login:
+                login_path: 'app_login'
+                check_path: 'app_login'
+                enable_csrf: true
             
             logout:
-                path: /logout
-
+                path: 'app_logout'
+                            
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -33,7 +52,7 @@ security:
         ROLE_ADMIN: [ ROLE_PROFESSOR ]
         ROLE_PROFESSOR: [ ROLE_STUDENT ]
         ROLE_STUDENT: [ ROLE_USER ]
-            
+    
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:

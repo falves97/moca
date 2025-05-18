@@ -1,0 +1,194 @@
+{% extends 'site/base.html.twig' %}
+{% form_theme settingsForm 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}{{ parent() }} | Configurações{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">Configurações</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container">
+            <div class="card">
+                {{ form_start(settingsForm, { attr: {id: 'form-user-settings'}|merge(stimulus_controller('user-settings', { userInitials: app.user.fullName|initials[:2] }).toArray()) }) }}
+                <div class="card-body">
+                    <h2>Minha Conta</h2>
+
+                    {{ form_errors(settingsForm) }}
+
+                    <h3 class="card-title">Imagem de Perfil</h3>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            {{ form_row(settingsForm.deleteAvatar, { attr: stimulus_target('user-settings', 'deleteAvatarOption').toArray() }) }}
+
+                            <button
+                                type="button"
+                                class="avatar avatar-xl border-0"
+                                data-bs-toggle="modal"
+                                data-bs-target="#imagePerfilModal"
+                                {% if app.user.avatar %}
+                                    style="background-image: url('{{ vich_uploader_asset(app.user.avatar) }}')"
+                                {% endif %}
+                                {{ stimulus_target('user-settings', 'userAvatar') }}
+                            >
+                                <span {{ stimulus_target('user-settings', 'avatarInitials') }}>{{ not app.user.avatar ? app.user.fullName|initials[:2] : '' }}</span>
+                                <span
+                                    class="badge badge-sm badge-icononly badge-pill bg-blue text-blue-fg">{{ ux_icon('tabler:pencil', { class: 'icon'}) }}</span>
+                            </button>
+
+                            <div
+                                class="modal fade"
+                                id="imagePerfilModal"
+                                data-bs-backdrop="static"
+                                data-bs-keyboard="false"
+                                tabindex="-1"
+                                aria-labelledby="staticBackdropLabel"
+                                aria-hidden="true"
+                            >
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Imagem de Perfil</h5>
+                                            <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                                {{ stimulus_action('user-settings', 'updateAvatarImage', 'click') }}
+                                            ></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <fieldset
+                                                class="collapse show"
+                                                {{ stimulus_target('user-settings', 'avatarFieldset') }}
+                                            >
+                                                <div class="row g-2">
+                                                    {% for option in settingsForm.defaultAvatar %}
+                                                        <div class="col-3">
+                                                            <label class="form-imagecheck mb-2">
+                                                                <input
+                                                                    name="{{ field_name(option) }}"
+                                                                    type="radio"
+                                                                    value="{{ field_value(option) }}"
+                                                                    class="form-imagecheck-input"
+                                                                    {% if app.user.avatar %}
+                                                                        {{ app.user.avatar.originalName in field_value(option) ? 'checked' }}
+                                                                    {% endif %}
+                                                                    {{ stimulus_target('user-settings', 'inputAvatar') }}
+                                                                    {{ stimulus_action('user-settings', 'setAvatarImageUrl', 'change', { imageUrl: field_value(option) ? asset(field_value(option)) : ''}) }}
+                                                                />
+                                                                <span class="form-imagecheck-figure">
+                                                                <img
+                                                                    src="{{ asset(field_value(option)) }}"
+                                                                    alt=""
+                                                                    class="form-imagecheck-image"
+                                                                />
+                                                            </span>
+                                                            </label>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </fieldset>
+                                            <div class="hr-text">Ou</div>
+                                            <div class="row">
+                                                {{ form_row(settingsForm.avatar) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-auto">
+                            <button
+                                type="button"
+                                class="btn btn-ghost-danger" {{ stimulus_action('user-settings', 'deleteAvatar') }}
+                            >
+                                Delete avatar
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3 class="cart-title mt-3">Informações do Perfil</h3>
+
+                    <div class="row row-gap-3">
+                        <div class="row row-gap-3">
+                            {{ form_row(settingsForm.firstName, {
+                                row_attr: { class: 'col-12 col-lg-6' },
+                            }) }}
+                            {{ form_row(settingsForm.lastName, {
+                                row_attr: { class: 'col-12 col-lg-6' },
+                            }) }}
+                        </div>
+
+                        <div class="row row-gap-3">
+                            <div class="col-12 col-lg-6">
+                                {{ form_label(settingsForm.username) }}
+                                <div class="input-icon">
+                                    <span class="input-icon-addon">{{ ux_icon('tabler:at', {'class': 'icon'}) }}</span>
+                                    {{ form_widget(settingsForm.username, { attr: { class: 'form-control' }}) }}
+                                </div>
+                                {{ form_help(settingsForm.username) }}
+                                {{ form_errors(settingsForm.username) }}
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                {{ form_label(settingsForm.email) }}
+                                <div class="input-icon">
+                                    <span
+                                        class="input-icon-addon">{{ ux_icon('tabler:mail', {'class': 'icon'}) }}</span>
+                                    {{ form_widget(settingsForm.email, {attr: {class: 'form-control'}}) }}
+                                </div>
+                                {{ form_help(settingsForm.email) }}
+                                {{ form_errors(settingsForm.email) }}
+                            </div>
+                        </div>
+
+                        <h3 class="cart-title m-0">Segurança</h3>
+
+                        {% set passwordFields = {currentPassword: settingsForm.currentPassword}|merge(settingsForm.plainPassword.children) %}
+                        {% for field in passwordFields %}
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    {{ form_label(field) }}
+                                    <div
+                                        class="input-group input-group-flat" {{ stimulus_controller('toggle_password') }}>
+                                        {{ form_widget(field, {attr: stimulus_target('toggle_password', 'password').toArray()}) }}
+                                        <span
+                                            class="input-group-text p-0{{ field.vars.valid ? '' : ' border-danger' }}">
+                                            <button
+                                                type="button"
+                                                class="link-secondary bg-transparent border-0"
+                                                title="Mostrar senha"
+                                                data-bs-toggle="tooltip"
+                                            {{ stimulus_action('toggle_password', 'toggle', 'click') }}
+                                            >
+                                                {{ ux_icon('tabler:eye', {class: 'icon'}) }}
+                                            </button>
+                                        </span>
+                                    </div>
+                                    {{ form_help(field) }}
+                                    {{ form_errors(field) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-list">
+                        <a href="{{ path('app_user_settings') }}" class="btn">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </div>
+                {{ form_end(settingsForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

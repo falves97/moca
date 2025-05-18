@@ -13,7 +13,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ImageFileRepository::class)]
 #[InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'discriminator', type: 'string')]
-#[ORM\DiscriminatorMap(['image' => ImageFile::class, 'avatar' => AvatarFile::class])]
+#[ORM\DiscriminatorMap(['image' => ImageFile::class, 'avatar' => AvatarFile::class, 'default_avatar' => DefaultAvatarFile::class])]
 #[Vich\Uploadable]
 class ImageFile
 {

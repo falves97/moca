@@ -1,0 +1,37 @@
+{% extends 'site/base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %}
+    {% block dashboard_header %}
+        <div class="page-header d-print-none">
+            <div class="container">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <h2 class="page-title">{% block dashboard_title %}{% endblock %}</h2>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        {% block dashboard_header_actions %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    <div class="page-body">
+        <div class="container">
+            <div class="card">
+                <div class="row g-0">
+                    {% block dashboard_menu %}
+                        <div class="col-12 col-md-3">
+                            <div class="card-body">
+                            </div>
+                        </div>
+                    {% endblock %}
+                    {% block dashboard_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

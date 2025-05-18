@@ -2,9 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\DefaultAvatarFile;
 use App\Entity\Discipline;
 use App\Entity\Lesson;
-use App\Entity\Module;
 use App\Entity\Professor;
 use App\Entity\Quiz;
 use App\Entity\Student;
@@ -59,6 +59,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::subMenu('Módulos', 'books'),
             MenuItem::linkToCrud('Lições', 'book', Lesson::class),
             MenuItem::linkToCrud('Questionários', 'book', Quiz::class),
+            MenuItem::linkToCrud('Avatares', 'library-photo', DefaultAvatarFile::class),
         ];
     }
 
