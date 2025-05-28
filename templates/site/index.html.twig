@@ -1,20 +1,159 @@
 {% extends 'site/base.html.twig' %}
 
-{% block title %}Hello SiteController!{% endblock %}
+{% block title %}Engajando Saberes{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .index {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            min-height: 100vh;
+        }
+        .card-level {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        .card-level:hover {
+            transform: scale(1.05);
+        }
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        .stats-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        .stats-card:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .community-section {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/app/src/Controller/SiteController.php</code></li>
-        <li>Your template at <code>/app/templates/site/index.html.twig</code></li>
-    </ul>
-</div>
+        p {
+            /*font-size: 15px;*/
+            color: #374151;
+
+        }
+
+    </style>
+    <div class="index">
+    <div class="container py-5">
+        <header class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-white mb-3">Bem-vindos, Programadoras e Programadores!</h1>
+            <h3 class="text-white mb-3">"Sua jornada épica no Universo dos Códigos começa agora na Engajando Saberes, onde programação vira aventura gamificada, desafios viram recompensas e vocês são os heróis moldando o futuro com linhas de código!"</h3>
+
+        </header>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card-level h-100">
+                    <div class="text-center">
+                        <img src="{{ asset('img/imagemtres.png') }}" alt="Jornada de Programação" class="featured-image img-fluid" style="max-height: 400px;">
+
+                        <h3 class="h4 fw-semibold text-white mb-2">Ganhe Pontos</h3>
+                        <p class="text-light">Respondendo Quizzes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card-level h-100">
+                    <div class="text-center">
+                        <div>
+
+                        </div>
+                        <img src="{{ asset('img/imagemquatro.png') }}" alt="Jornada de Programação" class="featured-image img-fluid" style="max-height: 400px;">
+                        <h3 class="h4 fw-semibold text-white mb-2">Recompensas</h3>
+                        <p class="text-light">Dominando as tecnologias</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card-level h-100">
+                    <div class="text-center">
+
+                        <img src="{{ asset('img/imagemcinco.png') }}" alt="Jornada de Programação" class="featured-image img-fluid" style="max-height: 400px;">
+                        <h3 class="h4 fw-semibold text-white mb-2">Rankings</h3>
+                        <p class="text-light">Expertise em desenvolvimento</p>
+                    </div>
+                </div
+            </div>
+        </div>
+
+        <div class="row text-center h-100 bg-white my-4 d-flex flex-row justify-content-center align-items-center rounded-3">
+            <div class="col-5">
+                <img src="{{ asset('img/imagemmeio.png') }}" alt="Jornada de Programação" class="featured-image img-fluid" style="max-height: 400px;">
+
+            </div>
+            <div class="col-6 text-justify py-5" style="text-align: justify !important;">
+                <p><strong>🌌 Sua jornada de código começa aqui,  ao Universo dos Códigos!</strong></p>
+                <p>🌟 Aqui, na plataforma Engajando Saberes, vocês estão prestes a embarcar em uma jornada épica pelo mundo da programação e dos algoritmos—um universo onde linhas de código se transformam em soluções, criatividade e poder transformador.</p>
+
+                <p class="my-2">🔮 Imagine um lugar onde cada comando que você digita é um passo em direção a construir sistemas, aplicativos e realidades digitais. Aqui, vocês não são apenas alunos... são exploradores de um novo cosmos, onde variáveis, loops e condicionais são as ferramentas que moldarão seu destino.</p>
+
+                <p class="mb-2">🎯 Nesta trilha de aprendizagem gamificada, cada desafio superado vale pontos, cada conquista desbloqueia recompensas e cada nível alcançado prova que vocês estão dominando novas habilidades. Vocês competirão em rankings, ganharão badges exclusivos e verão seu progresso em tempo real—tudo enquanto mergulham no incrível mundo da programação!</p>
+
+                <p>🚀 Preparem-se, porque a partir de hoje:</p>
+                <p>✔ Cada bug resolvido é uma vitória.</p>
+                <p>✔ Cada projeto concluído rende medalhas e desbloqueia novos desafios.</p>
+                <p>✔ Cada dúvida transformada em aprendizado faz de vocês programadores e programadoras mais poderosos(as) no ranking da plataforma.</p>
+
+                <p class="my-2">Aqui, na Engajando Saberes, aprender é uma aventura—e vocês são os heróis dessa história! 🎮💻</p>
+
+                <p class="mb-2">📌 Lembrem-se: Por trás de todo grande software, há um programador que um dia decidiu começar. Hoje é o seu dia! Será que vocês têm o que é preciso para chegar ao topo?</p>
+
+                <p class="mb-2">Vamos codar e conquistar? 💻✨
+
+                <p>#EngajandoSaberes #UniversoDosCodigos #ProgramadoresDoFuturo #AprendizadoGamificado </p>
+            </div>
+        </div>
+
+
+        <div class="community-section mb-5">
+            <div class="text-center mb-4">
+                <h2 class="display-5 fw-bold text-white mb-3">Comunidade</h2>
+                <p class="text-light fs-5">Junte-se a milhares de desenvolvedores</p>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="stats-card h-100">
+                        <p class="display-6 fw-bold text-white mb-2">10k+</p>
+                        <p class="text-light">Desenvolvedores</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stats-card h-100">
+                        <p class="display-6 fw-bold text-white mb-2">5k+</p>
+                        <p class="text-light">Projetos</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stats-card h-100">
+                        <p class="display-6 fw-bold text-white mb-2">1k+</p>
+                        <p class="text-light">Mentorias</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stats-card h-100">
+                        <p class="display-6 fw-bold text-white mb-2">100+</p>
+                        <p class="text-light">Cursos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center">
+            <p class="text-light fs-5 fst-italic">"O código é poesia em lógica"</p>
+        </footer>
+    </div>
+    </div>
 {% endblock %}
