@@ -1,0 +1,77 @@
+{% extends 'site/base.html.twig' %}
+
+
+{% block title %}
+    {{ parent() }} | Disciplinas
+{% endblock %}
+
+{% block body %}
+    <div class="page-header d-print-none" aria-label="Page header">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        Disciplinas
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                {% for discipline in disciplines %}
+                    <div class="col-lg-6">
+                        <a class="card card-link" href="{{ path('site_discipline_show', {'id': discipline.id}) }}">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-3">
+                                        <img
+                                            src="https://cdn.dribbble.com/users/844826/screenshots/14553706/media/2be9a4847b939e02702648d058cf2df8.png"
+                                            alt="Food Deliver UI dashboards" class="rounded">
+                                    </div>
+                                    <div class="col">
+                                        <h3 class="card-title mb-1">
+                                            {{ discipline.name }}
+                                        </h3>
+                                        <div class="text-secondary">
+                                            {{ discipline.description|raw }}
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <div class="row g-2 align-items-center">
+                                                <div class="col-auto">
+                                                    25%
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar" style="width: 25%" role="progressbar"
+                                                             aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"
+                                                             aria-label="25% Complete">
+                                                            <span class="visually-hidden">25% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="row row-cards mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body d-flex justify-content-end">
+                            {{ pagerfanta(disciplines) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

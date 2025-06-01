@@ -22,11 +22,25 @@ class MenuBuilder
         $menu = $this->factory->createItem('root', ['childrenAttributes' => ['class' => 'navbar-nav']]);
 
         $menu->addChild('Home', [
-            'route' => 'app_site',
+            'route' => 'site_home',
             'attributes' => ['class' => 'nav-item'],
             'linkAttributes' => ['class' => 'nav-link'],
             'labelAttributes' => ['class' => 'nav-link'],
             'extras' => ['icon' => 'tabler:home'],
+        ]);
+        $menu->addChild('Disciplinas', [
+            'route' => 'site_disciplines',
+            'attributes' => ['class' => 'nav-item'],
+            'linkAttributes' => ['class' => 'nav-link'],
+            'labelAttributes' => ['class' => 'nav-link'],
+            'extras' => ['icon' => 'tabler:book'],
+        ]);
+        $menu->addChild('Ranking', [
+            'route' => 'site_ranking',
+            'attributes' => ['class' => 'nav-item'],
+            'linkAttributes' => ['class' => 'nav-link'],
+            'labelAttributes' => ['class' => 'nav-link'],
+            'extras' => ['icon' => 'tabler:chart-bar'],
         ]);
 
         return $menu;
