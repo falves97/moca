@@ -75,6 +75,10 @@ class StudentCrudController extends AbstractCrudController
                 ])
                 ->onlyOnForms()
                 ->setRequired(Crud::PAGE_NEW == $pageName),
+            AssociationField::new('disciplines', 'Disciplinas')
+            ->setFormTypeOptions([
+                'by_reference' => false,
+            ])->setRequired(false),
         ];
     }
 }

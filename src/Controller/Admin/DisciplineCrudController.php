@@ -17,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 
 class DisciplineCrudController extends AbstractCrudController
@@ -52,6 +53,13 @@ class DisciplineCrudController extends AbstractCrudController
         return [
             FormField::addColumn('col-12'),
             IdField::new('id')
+                ->hideOnForm(),
+            AssociationField::new('banner', 'Banner')
+                ->setCrudController(ImageFileCrudController::class)
+                ->renderAsEmbeddedForm()
+                ->onlyOnForms(),
+            ImageField::new('banner.name', 'Banner')
+                ->setBasePath('/upload/images/')
                 ->hideOnForm(),
             Field::new('name', 'Nome'),
             TextEditorField::new('description', 'Descrição'),

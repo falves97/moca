@@ -4,7 +4,12 @@
     <div class="page-header d-print-none" aria-label="Page header">
         <div class="container-xl">
             <div class="discipline-header"
-                 style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')">
+                {% if discipline.banner %}
+                    style="background-image: url('{{ vich_uploader_asset(discipline.banner) }}')"
+                {% else %}
+                    style="background-color: #f8f9fa;"
+                {% endif %}
+            >
                 <div class="col">
                     <h2 class="page-title fs-1">
                         {{ discipline.name }}
@@ -139,22 +144,22 @@
                                             {{ discipline.modules|length }}
                                         </div>
                                     </li>
-                                    <li class="list-group-item d-flex justify-content-between align-content-start">
-                                        <div class="col-auto">
-                                            <span class="fw-bold">Lições:</span>
-                                        </div>
-                                        <div class="col-auto">
-                                            {{ discipline.modules|length }}
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-content-start">
-                                        <div class="col-auto">
-                                            <span class="fw-bold">Testes:</span>
-                                        </div>
-                                        <div class="col-auto">
-                                            {{ discipline.modules|length }}
-                                        </div>
-                                    </li>
+                                    {#                                    <li class="list-group-item d-flex justify-content-between align-content-start"> #}
+                                    {#                                        <div class="col-auto"> #}
+                                    {#                                            <span class="fw-bold">Lições:</span> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-auto"> #}
+                                    {#                                            {{ discipline.modules|length }} #}
+                                    {#                                        </div> #}
+                                    {#                                    </li> #}
+                                    {#                                    <li class="list-group-item d-flex justify-content-between align-content-start"> #}
+                                    {#                                        <div class="col-auto"> #}
+                                    {#                                            <span class="fw-bold">Testes:</span> #}
+                                    {#                                        </div> #}
+                                    {#                                        <div class="col-auto"> #}
+                                    {#                                            {{ discipline.modules|length }} #}
+                                    {#                                        </div> #}
+                                    {#                                    </li> #}
                                 </ul>
                             </div>
 

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Student;
 use App\Repository\DisciplineRepository;
 use App\Repository\LessonRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -93,7 +94,7 @@ final class SiteController extends AbstractController
 
     #[Route('/enroll/{discipline<\d+>}', name: 'enroll', methods: ['POST'])]
     #[IsGranted('ROLE_STUDENT')]
-    public function enroll(DisciplineRepository $repository, int $discipline): Response
+    public function enroll(DisciplineRepository $repository, int $discipline, EntityManagerInterface $entityManager): Response
     {
         $discipline = $repository->find($discipline);
 
@@ -102,20 +103,21 @@ final class SiteController extends AbstractController
         }
 
         $user = $this->getUser();
+        //        xdebug_break();
         if ($user instanceof Student) {
             // Check if the user is already enrolled in the discipline
             if ($discipline->getStudents()->contains($this->getUser())) {
                 $this->addFlash('error', 'Você já está matriculado nesta disciplina.');
-
-                return $this->redirectToRoute('site_discipline_show', ['id' => $discipline->getId()]);
             } else {
                 // Enroll the student in the discipline
                 $user->addDiscipline($discipline);
+                $entityManager->persist($user);
+                $entityManager->persist($discipline);
+                $entityManager->flush();
+                $this->addFlash('success', 'Você foi matriculado com sucesso na disciplina: '.$discipline->getName());
             }
         } else {
             $this->addFlash('error', 'Somente alunos podem se matricular em disciplinas.');
-
-            return $this->redirectToRoute('site_discipline_show', ['id' => $discipline->getId()]);
         }
 
         return $this->redirectToRoute('site_discipline_show', ['id' => $discipline->getId()]);

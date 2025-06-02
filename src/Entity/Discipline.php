@@ -56,6 +56,9 @@ class Discipline
     #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'disciplines')]
     private Collection $students;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?ImageFile $banner = null;
+
     public function __construct()
     {
         $this->modules = new ArrayCollection();
@@ -196,5 +199,17 @@ class Discipline
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    public function getBanner(): ?ImageFile
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(ImageFile $banner): static
+    {
+        $this->banner = $banner;
+
+        return $this;
     }
 }
