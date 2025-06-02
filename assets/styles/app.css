@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('site/discipline.css');
+
+.no-link-style {
+    color: rgba(var(--tblr-primary-rgb), 1) !important; /* Keep default color on hover/focus */
+}
+.no-link-style:hover,
+.no-link-style:focus {
+    color: rgba(var(--tblr-primary-rgb), 1) !important; /* Keep default color on hover/focus */
+    text-decoration: none !important; /* Remove underline on hover/focus */
+}
+
+.home-hero {
+    height: 500px;
+}

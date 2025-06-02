@@ -35,13 +35,13 @@ class MenuBuilder
             'labelAttributes' => ['class' => 'nav-link'],
             'extras' => ['icon' => 'tabler:book'],
         ]);
-        $menu->addChild('Ranking', [
-            'route' => 'site_ranking',
-            'attributes' => ['class' => 'nav-item'],
-            'linkAttributes' => ['class' => 'nav-link'],
-            'labelAttributes' => ['class' => 'nav-link'],
-            'extras' => ['icon' => 'tabler:chart-bar'],
-        ]);
+//        $menu->addChild('Ranking', [
+//            'route' => 'site_ranking',
+//            'attributes' => ['class' => 'nav-item'],
+//            'linkAttributes' => ['class' => 'nav-link'],
+//            'labelAttributes' => ['class' => 'nav-link'],
+//            'extras' => ['icon' => 'tabler:chart-bar'],
+//        ]);
 
         return $menu;
     }
@@ -49,13 +49,13 @@ class MenuBuilder
     public function createUserMenu(array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root', ['childrenAttributes' => ['class' => 'nav flex-column']]);
-        $firstSection = $menu->addChild('First Section', ['display' => false, 'childrenAttributes' => ['class' => 'nav flex-column']]);
-        $firstSection->addChild('Dashboard', ['route' => 'app_dashboard', 'linkAttributes' => ['class' => 'dropdown-item']]);
-        $firstSection->addChild('Profile', [
-            'route' => 'app_user_profile',
-            'routeParameters' => ['username' => $this->security->getUser()->getUsername()],
-            'linkAttributes' => ['class' => 'dropdown-item'],
-        ]);
+//        $firstSection = $menu->addChild('First Section', ['display' => false, 'childrenAttributes' => ['class' => 'nav flex-column']]);
+//        $firstSection->addChild('Dashboard', ['route' => 'app_dashboard', 'linkAttributes' => ['class' => 'dropdown-item']]);
+//        $firstSection->addChild('Profile', [
+//            'route' => 'app_user_profile',
+//            'routeParameters' => ['username' => $this->security->getUser()->getUsername()],
+//            'linkAttributes' => ['class' => 'dropdown-item'],
+//        ]);
 
         $menu->addChild('Settings', ['route' => 'app_user_settings', 'linkAttributes' => ['class' => 'dropdown-item']]);
         $menu->addChild('Logout', ['route' => 'app_logout', 'linkAttributes' => ['class' => 'dropdown-item']]);

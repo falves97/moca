@@ -9,10 +9,13 @@ use App\Repository\DefaultAvatarFileRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Vich\UploaderBundle\FileAbstraction\ReplacingFile;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -28,7 +31,8 @@ final class UserController extends AbstractController
     }
 
     #[Route('/settings', name: 'app_user_settings')]
-    public function settings(Request $request, EntityManagerInterface $entityManager, DefaultAvatarFileRepository $defaultAvatarFileRepository): Response
+    #[IsGranted('ROLE_STUDENT')]
+    public function settings(Request $request, EntityManagerInterface $entityManager, DefaultAvatarFileRepository $defaultAvatarFileRepository, UploaderHelper $uploaderHelper): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -41,9 +45,14 @@ final class UserController extends AbstractController
                 $avatarPath = $settingsForm->get('defaultAvatar')->getData();
                 $deleteAvatar = boolval($settingsForm->get('deleteAvatar')->getData());
 
-                $defaultAvatar = $defaultAvatarFileRepository->findOneBy(['name' => $avatarPath]);
+                $defaultAvatar = $defaultAvatarFileRepository->findOneBy(['name' => $avatarPath->getName()]);
                 if ($avatarPath && $defaultAvatar) {
-                    $user->setAvatar($defaultAvatar->getFile());
+                    $path = Path::makeAbsolute('public'.$uploaderHelper->asset($defaultAvatar), $this->getParameter('kernel.project_dir'));
+                    $replacingFile = new ReplacingFile($path);
+                    $avatarFile = new AvatarFile();
+                    $avatarFile->setFile($replacingFile);
+
+                    $user->setAvatar($avatarFile);
                 } elseif ($deleteAvatar) {
                     $user->setAvatar(null);
                 }

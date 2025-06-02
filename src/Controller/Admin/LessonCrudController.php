@@ -36,7 +36,12 @@ class LessonCrudController extends AbstractCrudController
                 ->autocomplete()
                 ->setRequired(true),
             TextField::new('name', 'Nome'),
-            TextEditorField::new('content', 'Conteúdo'),
+            TextEditorField::new('content', 'Conteúdo')
+            ->setFormTypeOptions([
+                'attr' => [
+                    'toolbar' => 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image media',
+                ],
+            ]),
         ];
     }
 }

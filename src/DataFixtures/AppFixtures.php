@@ -15,7 +15,7 @@ class AppFixtures extends Fixture
     {
         $admin = UserFactory::createOne(['email' => 'admin@email.com', 'password' => 'senha', 'roles' => ['ROLE_ADMIN']]);
         $student = StudentFactory::createOne(['email' => 'student@email.com', 'password' => 'senha']);
-        $professor = ProfessorFactory::createOne(['email' => 'professor@emai.com', 'password' => 'senha']);
+        $professor = ProfessorFactory::createOne(['email' => 'professor@email.com', 'password' => 'senha', 'roles' => ['ROLE_ADMIN', 'ROLE_PROFESSOR']]);
 
         $discipline = DisciplineFactory::createOne([
             'name' => 'Matemática',

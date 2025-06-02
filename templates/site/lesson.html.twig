@@ -1,0 +1,38 @@
+{% extends 'site/base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Aulas
+{% endblock %}
+
+{% block body %}
+    <div class="page-header d-print-none" aria-label="Page header">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        {{ lesson.name }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-lg-12">
+                    <div class="card card-link">
+                        <div class="card-body">
+                            {{ lesson.content|raw }}
+                            <div class="mt-3">
+                                <a href="{{ path('site_discipline_show', {'id': lesson.module.discipline.id}) }}"
+                                   class="btn btn-primary">
+                                    Voltar para as aulas
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,2 +1,178 @@
 {% extends 'site/base.html.twig' %}
 
+{% block body %}
+    <div class="page-header d-print-none" aria-label="Page header">
+        <div class="container-xl">
+            <div class="discipline-header"
+                 style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')">
+                <div class="col">
+                    <h2 class="page-title fs-1">
+                        {{ discipline.name }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-lg-8">
+                    <div class="row row-cards">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Sobre a disciplina</h3>
+                                <div class="text-secondary">
+                                    {{ discipline.description|raw }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Módulos</h3>
+
+                                <div class="accordion" id="modules-accordion">
+                                    {% for module in discipline.modules %}
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                                <button class="accordion-button"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse-module{{ module.id }}"
+                                                        aria-expanded="true"
+                                                >
+                                                    {{ module.name }}
+                                                    <span class="accordion-button-toggle">
+                                                    {{ ux_icon('tabler:chevron-down', {class: 'icon'}) }}
+                                                </span>
+                                                </button>
+                                            </div>
+                                            <div id="collapse-module{{ module.id }}"
+                                                 class="accordion-collapse collapse show"
+                                                 data-bs-parent="#modules-accordion"
+                                            >
+                                                <div class="accordion-body">
+                                                    {% for lesson in module.lessons %}
+                                                        <div class="list-group list-group-flush">
+                                                            <a href="{{ path('site_lesson_show', {id: lesson.id}) }}"
+                                                               class="list-group-item list-group-item-action">
+                                                                <div class="d-flex w-100 justify-content-between">
+                                                                    <div>
+                                                                        {{ ux_icon('tabler:book', {class: 'icon me-2'}) }}
+                                                                        <span>{{ lesson.name }}</span>
+                                                                    </div>
+                                                                    {#                                                                    <div> #}
+                                                                    {#                                                                        <span #}
+                                                                    {#                                                                            class="badge badge-lg rounded-pill badge-icononly text-bg-primary"> #}
+                                                                    {#                                                                            {{ ux_icon('tabler:check', {class: 'icon'}) }} #}
+                                                                    {#                                                                        </span> #}
+                                                                    {#                                                                    </div> #}
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="text-secondary p-3">Nenhuma lição cadastrada.</div>
+                                                    {% endfor %}
+
+                                                    {% for quiz in module.quizzes %}
+                                                        <div class="list-group list-group-flush">
+                                                            <a href="#"
+                                                               class="list-group-item list-group-item-action">
+                                                                <div class="d-flex w-100 justify-content-between">
+                                                                    <div>
+                                                                        {{ ux_icon('tabler:clipboard-check', {class: 'icon me-2'}) }}
+                                                                        <span>Quiz {{ loop.index }}</span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span
+                                                                            class="badge badge-lg rounded-pill badge-icononly text-bg-primary">
+                                                                            {{ ux_icon('tabler:check', {class: 'icon'}) }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="text-secondary p-3">Nenhum quiz cadastrado.</div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <h3 class="card-title">Professor</h3>
+
+                                <div class="col-auto">
+                                    <span
+                                        class="avatar avatar-lg"
+                                        {% if discipline.professor.avatar %}
+                                            style="background-image: url('{{ vich_uploader_asset(discipline.professor.avatar) }}')"
+                                        {% endif %}
+                                    >
+                                        {{ not discipline.professor.avatar ? discipline.professor.fullName|initials[:2] : '' }}
+                                    </span>
+                                </div>
+                                <div class="col-auto">
+                                    <div>
+                                        <h4 class="mb-1">{{ discipline.professor.fullName }}</h4>
+                                        <div class="text-secondary">{{ discipline.professor.email }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h3 class="card-title mt-3">Informações</h3>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-content-start">
+                                        <div class="col-auto">
+                                            <span class="fw-bold">Módulos:</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            {{ discipline.modules|length }}
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-content-start">
+                                        <div class="col-auto">
+                                            <span class="fw-bold">Lições:</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            {{ discipline.modules|length }}
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-content-start">
+                                        <div class="col-auto">
+                                            <span class="fw-bold">Testes:</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            {{ discipline.modules|length }}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {% if is_granted('ROLE_STUDENT') and app.user not in discipline.students %}
+                                <form action="{{ url('site_enroll', {discipline: discipline.id}) }}" method="post">
+                                    <div class="row mt-3">
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                {{ ux_icon('tabler:plus', {class: 'icon'}) }} Inscrever-se
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

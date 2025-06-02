@@ -71,6 +71,7 @@
                                             >
                                                 <div class="row g-2">
                                                     {% for option in settingsForm.defaultAvatar %}
+                                                        {% set imageUrl = '/upload/images/avatars/' ~ field_value(option) %}
                                                         <div class="col-3">
                                                             <label class="form-imagecheck mb-2">
                                                                 <input
@@ -82,16 +83,17 @@
                                                                         {{ app.user.avatar.originalName in field_value(option) ? 'checked' }}
                                                                     {% endif %}
                                                                     {{ stimulus_target('user-settings', 'inputAvatar') }}
-                                                                    {{ stimulus_action('user-settings', 'setAvatarImageUrl', 'change', { imageUrl: field_value(option) ? asset(field_value(option)) : ''}) }}
+                                                                    {{ stimulus_action('user-settings', 'setAvatarImageUrl', 'change', { imageUrl: field_value(option) ? asset(imageUrl) : ''}) }}
                                                                 />
                                                                 <span class="form-imagecheck-figure">
                                                                 <img
-                                                                    src="{{ asset(field_value(option)) }}"
+                                                                    src="{{ asset(imageUrl) }}"
                                                                     alt=""
                                                                     class="form-imagecheck-image"
                                                                 />
                                                             </span>
                                                             </label>
+
                                                         </div>
                                                     {% endfor %}
                                                 </div>
