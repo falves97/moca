@@ -1,5 +1,9 @@
 {% extends 'site/base.html.twig' %}
 
+{% block title %}
+    {{ parent() }} | Disciplinas | {{ discipline.name }}
+{% endblock %}
+
 {% block body %}
     <div class="page-header d-print-none" aria-label="Page header">
         <div class="container-xl">
