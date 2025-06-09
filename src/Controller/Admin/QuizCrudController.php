@@ -34,9 +34,17 @@ class QuizCrudController extends AbstractCrudController
             AssociationField::new('module', 'Módulo')
                 ->autocomplete(),
             CollectionField::new('subjectiveQuestions', 'Questões Subjetivas')
-                ->useEntryCrudForm(SubjectiveQuestionCrudController::class),
+                ->useEntryCrudForm(SubjectiveQuestionCrudController::class)
+                ->addJsFiles(
+                    'bundles/tinymce/ext/tinymce/tinymce.min.js',
+                    'bundles/tinymce/ext/tinymce-webcomponent.js',
+                ),
             CollectionField::new('multipleChoiceQuestions', 'Questões de Múltipla Escolha')
-                ->useEntryCrudForm(MultipleChoiceQuestionCrudController::class),
+                ->useEntryCrudForm(MultipleChoiceQuestionCrudController::class)
+                ->addJsFiles(
+                    'bundles/tinymce/ext/tinymce/tinymce.min.js',
+                    'bundles/tinymce/ext/tinymce-webcomponent.js',
+                ),
         ];
     }
 }
