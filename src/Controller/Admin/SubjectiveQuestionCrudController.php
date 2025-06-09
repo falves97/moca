@@ -22,7 +22,12 @@ class SubjectiveQuestionCrudController extends AbstractCrudController
             FormField::addColumn('col-12'),
             IdField::new('id')
                 ->hideOnForm(),
-            TextEditorField::new('statement', 'Enunciado'),
+            TextEditorField::new('statement', 'Enunciado')
+                ->setFormTypeOptions([
+                    'attr' => [
+                        'toolbar' => 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | link image media',
+                    ],
+                ]),
             IntegerField::new('maximumPossiblePoints', 'Pontos Máximos')
                 ->setFormTypeOption('attr', [
                     'min' => 1,
