@@ -15,7 +15,7 @@ class QuizResponseType extends AbstractType
         $quizResponse = $builder->getData();
 
         foreach ($quizResponse->getSubjetiveResponses() as $subjetiveResponse) {
-            $builder->add('subjetiveResponse'.$subjetiveResponse->getId(), SubjectiveResponseType::class, [
+            $builder->add('subjetiveResponse'.$subjetiveResponse->getQuestion()->getId(), SubjectiveResponseType::class, [
                 'data' => $subjetiveResponse,
                 'mapped' => false,
                 'label' => $subjetiveResponse->getQuestion()->getStatement(),
@@ -24,7 +24,7 @@ class QuizResponseType extends AbstractType
         }
 
         foreach ($quizResponse->getMultipleChoiceResponses() as $multipleChoiceResponse) {
-            $builder->add('multipleChoiceResponse'.$multipleChoiceResponse->getId(), MultipleChoiceResponseType::class, [
+            $builder->add('multipleChoiceResponse'.$multipleChoiceResponse->getQuestion()->getId(), MultipleChoiceResponseType::class, [
                 'data' => $multipleChoiceResponse,
                 'mapped' => false,
                 'label' => $multipleChoiceResponse->getQuestion()->getStatement(),
