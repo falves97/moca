@@ -30,7 +30,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/discipline', name: 'disciplines', methods: ['GET'])]
-    public function discipline(Request $request, DisciplineRepository $repository): Response
+    public function disciplines(Request $request, DisciplineRepository $repository): Response
     {
         $disciplines = new Pagerfanta(new QueryAdapter($repository->findAllPaginatedQueryBuilder()));
         $disciplines->setMaxPerPage(10);
@@ -42,7 +42,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/discipline/{id}', name: 'discipline_show', methods: ['GET'])]
-    public function disciplineShow(DisciplineRepository $repository, int $id): Response
+    public function discipline(DisciplineRepository $repository, int $id): Response
     {
         $discipline = $repository->find($id);
 
@@ -68,8 +68,17 @@ final class SiteController extends AbstractController
             $totalQuizzes = $discipline->getModules()->reduce(function ($totalQuizzes, $module) {
                 return $totalQuizzes + $module->getQuizzes()->count();
             });
-            if ($totalQuizzes > 0) {
-                $disciplinePercentage = ($finishedQuizzes / $totalQuizzes) * 100;
+            $finishedLessons = $user->getLessons()->filter(function ($lesson) use ($discipline) {
+                return $lesson->getModule()->getDiscipline() === $discipline;
+            })->count();
+            $totalLessons = $discipline->getModules()->reduce(function ($totalLessons, $module) {
+                return $totalLessons + $module->getLessons()->count();
+            });
+
+            $finishedItems = $finishedQuizzes + $finishedLessons;
+            $totalItems = $totalQuizzes + $totalLessons;
+            if ($totalItems > 0) {
+                $disciplinePercentage = (int) round(($finishedItems / $totalItems) * 100);
             }
         }
 
