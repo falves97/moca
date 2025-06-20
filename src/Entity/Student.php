@@ -22,11 +22,18 @@ class Student extends User
     #[ORM\OneToMany(targetEntity: QuizResponse::class, mappedBy: 'student', orphanRemoval: true)]
     private Collection $quizResponses;
 
+    /**
+     * @var Collection<int, Lesson>
+     */
+    #[ORM\ManyToMany(targetEntity: Lesson::class, mappedBy: 'students')]
+    private Collection $lessons;
+
     public function __construct()
     {
         $this->setRoles(['ROLE_STUDENT']);
         $this->disciplines = new ArrayCollection();
         $this->quizResponses = new ArrayCollection();
+        $this->lessons = new ArrayCollection();
     }
 
     /**
@@ -86,6 +93,33 @@ class Student extends User
             if ($quizResponse->getStudent() === $this) {
                 $quizResponse->setStudent(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lesson>
+     */
+    public function getLessons(): Collection
+    {
+        return $this->lessons;
+    }
+
+    public function addLesson(Lesson $lesson): static
+    {
+        if (!$this->lessons->contains($lesson)) {
+            $this->lessons->add($lesson);
+            $lesson->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLesson(Lesson $lesson): static
+    {
+        if ($this->lessons->removeElement($lesson)) {
+            $lesson->removeStudent($this);
         }
 
         return $this;

@@ -23,11 +23,22 @@
                     <div class="card card-link">
                         <div class="card-body">
                             {{ lesson.content|raw }}
-                            <div class="mt-3">
+                            <div class="d-flex justify-content-between mt-3">
                                 <a href="{{ path('site_discipline_show', {'id': lesson.module.discipline.id}) }}"
-                                   class="btn btn-primary">
+                                   class="btn btn-outline-secondary">
                                     Voltar para as aulas
                                 </a>
+
+                                {% if lesson in app.user.lessons %}
+                                    <span class="badge bg-primary text-primary-fg">Concluída</span>
+                                {% else %}
+                                    <form action="{{ path('site_lesson_complete', {'id': lesson.id}) }}" method="post"
+                                          class="d-inline">
+                                        <button type="submit" class="btn btn-primary">
+                                            Marcar como concluída
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

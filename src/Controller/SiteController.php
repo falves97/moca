@@ -10,6 +10,7 @@ use App\Form\QuizResponseType;
 use App\Repository\DisciplineRepository;
 use App\Repository\LessonRepository;
 use App\Repository\QuizRepository;
+use App\Repository\StudentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -58,19 +59,25 @@ final class SiteController extends AbstractController
             })
             ->map(fn (QuizResponse $response) => $response->getQuiz());
 
+        $disciplinePercentage = 0;
+
+        if ($user) {
+            $finishedQuizzes = $user->getQuizResponses()->filter(function (QuizResponse $response) use ($discipline) {
+                return $response->getQuiz()->getModule()->getDiscipline() === $discipline;
+            })->count();
+            $totalQuizzes = $discipline->getModules()->reduce(function ($totalQuizzes, $module) {
+                return $totalQuizzes + $module->getQuizzes()->count();
+            });
+            if ($totalQuizzes > 0) {
+                $disciplinePercentage = ($finishedQuizzes / $totalQuizzes) * 100;
+            }
+        }
+
         return $this->render('site/discipline/show.html.twig', [
             'discipline' => $discipline,
             'studentFinishedQuizzes' => $studentFinishedQuizzes,
+            'disciplinePercentage' => $disciplinePercentage,
         ]);
-    }
-
-    #[Route('/ranking', name: 'ranking')]
-    public function ranking(): Response
-    {
-        // This is a placeholder for the ranking page logic.
-        // You can implement the logic to fetch and display rankings here.
-
-        return $this->render('site/ranking.html.twig');
     }
 
     #[Route('/lesson/{id<\d+>}', name: 'lesson_show', methods: ['GET'])]
@@ -271,6 +278,69 @@ final class SiteController extends AbstractController
         return $this->render('site/quiz/result.html.twig', [
             'quiz' => $quiz,
             'quizResponse' => $quizResponse,
+        ]);
+    }
+
+    #[Route('/lesson/{id<\d+>}/complete', name: 'lesson_complete', methods: ['POST'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function lessonComplete(LessonRepository $repository, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $lesson = $repository->find($id);
+
+        if (!$lesson) {
+            throw $this->createNotFoundException('Lesson not found');
+        }
+
+        // Check if the user is enrolled in the discipline of the lesson
+        $user = $this->getUser();
+        if (!$user instanceof Student) {
+            $this->addFlash('error', 'Você precisa estar logado como aluno para finalizar esta lição.');
+
+            return $this->redirectToRoute('site_discipline_show', ['id' => $lesson->getModule()->getDiscipline()->getId()]);
+        }
+
+        if (!$user->getLessons()->contains($lesson)) {
+            $user->addLesson($lesson);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash('success', 'Lição finalizada com sucesso!');
+        } else {
+            $this->addFlash('error', 'Você já finalizou esta lição.');
+        }
+
+        return $this->redirectToRoute('site_lesson_show', ['id' => $lesson->getId()]);
+    }
+
+    #[Route('/ranking', name: 'ranking', methods: ['GET'])]
+    public function ranking(StudentRepository $repository): Response
+    {
+        $students = $repository->findAll();
+        $studentsPoints = [];
+
+        usort($students, function (Student $a, Student $b) use (&$studentsPoints) {
+            $fnReduce = static function (int $aPoints, QuizResponse $quizResponse) {
+                $subjectivePoints = $quizResponse->getSubjetiveResponses()->reduce(static function (int $subjectivePoints, SubjetiveResponse $subjetiveResponse) {
+                    return $subjectivePoints + ($subjetiveResponse->getPoints() ?? 0);
+                }, 0);
+                $multipleChoicePoints = $quizResponse->getMultipleChoiceResponses()->reduce(static function (int $multipleChoicePoints, MultipleChoiceResponse $multipleChoiceResponse) {
+                    return $multipleChoicePoints + ($multipleChoiceResponse->getPoints() ?? 0);
+                }, 0);
+
+                return $aPoints + $subjectivePoints + $multipleChoicePoints;
+            };
+
+            $aPoints = $a->getQuizResponses()->reduce($fnReduce, 0);
+
+            $bPoints = $b->getQuizResponses()->reduce($fnReduce, 0);
+            $studentsPoints[$a->getId()] = $aPoints;
+            $studentsPoints[$b->getId()] = $bPoints;
+
+            return $bPoints <=> $aPoints; // Sort in descending order
+        });
+
+        return $this->render('site/ranking.html.twig', [
+            'students' => $students,
+            'studentsPoints' => $studentsPoints,
         ]);
     }
 }
