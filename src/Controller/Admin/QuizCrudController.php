@@ -38,13 +38,19 @@ class QuizCrudController extends AbstractCrudController
                 ->addJsFiles(
                     'bundles/tinymce/ext/tinymce/tinymce.min.js',
                     'bundles/tinymce/ext/tinymce-webcomponent.js',
-                ),
+                )->onlyWhenCreating(),
+            CollectionField::new('subjectiveQuestions', 'Questões Subjetivas')
+                ->useEntryCrudForm(SubjectiveQuestionCrudController::class)
+                ->onlyWhenUpdating(),
             CollectionField::new('multipleChoiceQuestions', 'Questões de Múltipla Escolha')
                 ->useEntryCrudForm(MultipleChoiceQuestionCrudController::class)
                 ->addJsFiles(
                     'bundles/tinymce/ext/tinymce/tinymce.min.js',
                     'bundles/tinymce/ext/tinymce-webcomponent.js',
-                ),
+                )->onlyWhenCreating(),
+            CollectionField::new('multipleChoiceQuestions', 'Questões de Múltipla Escolha')
+                ->useEntryCrudForm(MultipleChoiceQuestionCrudController::class)
+                ->onlyWhenUpdating(),
         ];
     }
 }

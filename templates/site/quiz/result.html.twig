@@ -1,0 +1,59 @@
+{% extends 'site/base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Resultados do Quiz
+{% endblock %}
+
+{% block body %}
+    <div class="page-header d-print-none" aria-label="Page header">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        Resultados do Quiz
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-lg-12">
+                    <div class="card card-link">
+                        <div class="card-body">
+                            {% for subjectiveResponse in quizResponse.subjetiveResponses %}
+                                <div class="mb-4">
+                                    <div>{{ subjectiveResponse.question.statement|raw }}</div>
+                                    <p><span class="fw-bold">Resposta:</span> {{ subjectiveResponse.content }}</p>
+                                    <p><span class="fw-bold">Pontuação:</span> {{ subjectiveResponse.points ?? 0 }}</p>
+                                </div>
+                            {% endfor %}
+
+                            {% for multipleChoiceResponse in quizResponse.multipleChoiceResponses %}
+                                <div class="mb-4">
+                                    <div class="row">{{ multipleChoiceResponse.question.statement|raw }}</div>
+                                    {% for alternative in multipleChoiceResponse.question.alternatives %}
+                                        <div class="d-flex justify-content-sm-between align-items-center mb-2">
+                                            <div class="col-auto">{{ alternative.statement|raw }}</div>
+
+                                            {% if alternative in multipleChoiceResponse.alternatives %}
+                                                <span
+                                                    class="badge badge-lg rounded-pill badge-icononly {{ alternative.isCorrect ? 'bg-success text-blue-fg' : 'bg-danger text-red-fg' }}">
+                                                    {{ ux_icon(alternative.isCorrect ? 'tabler:check' : 'tabler:x', {class: 'icon'}) }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    <p><span class="fw-bold">Pontuação:</span> {{ multipleChoiceResponse.points ?? 0 }}
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

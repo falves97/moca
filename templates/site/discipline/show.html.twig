@@ -85,19 +85,28 @@
 
                                                     {% for quiz in module.quizzes %}
                                                         <div class="list-group list-group-flush">
-                                                            <a href="#"
+                                                            <a href="{{ path('site_quiz', {id: quiz.id}) }}"
                                                                class="list-group-item list-group-item-action">
                                                                 <div class="d-flex w-100 justify-content-between">
                                                                     <div>
                                                                         {{ ux_icon('tabler:clipboard-check', {class: 'icon me-2'}) }}
                                                                         <span>Quiz {{ loop.index }}</span>
                                                                     </div>
-                                                                    <div>
-                                                                        <span
-                                                                            class="badge badge-lg rounded-pill badge-icononly text-bg-primary">
-                                                                            {{ ux_icon('tabler:check', {class: 'icon'}) }}
-                                                                        </span>
-                                                                    </div>
+                                                                    {% if quiz in studentFinishedQuizzes %}
+                                                                        <div>
+                                                                            <span
+                                                                                class="badge badge-lg rounded-pill badge-icononly text-bg-primary">
+                                                                                {{ ux_icon('tabler:check', {class: 'icon'}) }}
+                                                                            </span>
+                                                                        </div>
+                                                                    {% else %}
+                                                                        <div>
+                                                                            <span
+                                                                                class="badge badge-lg rounded-pill badge-icononly badge-outline">
+                                                                                {{ ux_icon('tabler:check', {class: 'icon'}) }}
+                                                                            </span>
+                                                                        </div>
+                                                                    {% endif %}
                                                                 </div>
                                                             </a>
                                                         </div>
