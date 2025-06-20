@@ -112,4 +112,9 @@ class Quiz
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return sprintf('Quiz %d - %s', $this->getId(), $this->getModule() ? $this->getModule()->getName() : 'Sem Módulo');
+    }
 }

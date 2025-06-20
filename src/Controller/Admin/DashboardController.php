@@ -8,6 +8,7 @@ use App\Entity\Lesson;
 use App\Entity\Module;
 use App\Entity\Professor;
 use App\Entity\Quiz;
+use App\Entity\QuizResponse;
 use App\Entity\Student;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -61,6 +62,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Lições', 'book', Lesson::class),
             MenuItem::linkToCrud('Questionários', 'book', Quiz::class),
             MenuItem::linkToCrud('Avatares', 'library-photo', DefaultAvatarFile::class),
+            MenuItem::linkToCrud('Respostas', 'check', QuizResponse::class),
         ];
     }
 
