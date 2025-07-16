@@ -32,34 +32,8 @@ class DashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-
-        $kpis = [
-            'total_students' => 28,
-            'engagement_rate' => 84.4,
-            'completed_activities' => 129,
-            'satisfaction' => 8.9,
-        ];
-
-        $engagementLabels = ['Abril', 'Maio', 'junho'];
-        $engagementData = [97.7, 81.5, 66.7];
-
-        $activitiesLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5', 'Semana 6'];
-        $activitiesData = [27, 22, 19, 25, 19, 17];
-
-        $motivationLabels = ['Significado Épico', 'Empoderamento', 'Influência Social', 'Imprevisibilidade e Curiosidade', 'Evitar Perda','Escassez e Impaciência', 'Posse','Desenvolvimento e realização'];
-        $motivationData = [28.9, 26.7, 36.7, 28.9, 22.2, 35.6, 38.9, 62.2];
-
-        return $this->render('admin/dashboard.html.twig', [
-            'kpis' => $kpis,
-            'engagement_labels' => $engagementLabels,
-            'engagement_data' => $engagementData,
-            'activities_labels' => $activitiesLabels,
-            'activities_data' => $activitiesData,
-            'motivation_labels' => $motivationLabels,
-            'motivation_data' => $motivationData,
-        ]);
+        return $this->render('@EasyAdmin/layout.html.twig');
     }
-
 
     public function configureAssets(): Assets
     {
