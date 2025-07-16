@@ -1,0 +1,149 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title 'Dashboard de Gamificação' %}
+
+{% block content %}
+    <style>
+        .kpi-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .kpi-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .kpi-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .chart-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+    </style>
+
+    <div class="container mt-4">
+
+        <div class="row mb-4 text-center">
+            <div class="col-md-3">
+                <div class="kpi-box">
+                    <div class="kpi-value">{{ kpis.total_students }}</div>
+                    <div class="kpi-label">Total de Alunos</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-box">
+                    <div class="kpi-value">{{ kpis.engagement_rate }}%</div>
+                    <div class="kpi-label">Taxa de Engajamento</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-box">
+                    <div class="kpi-value">{{ kpis.completed_activities }}</div>
+                    <div class="kpi-label">Atividades Concluídas</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-box">
+                    <div class="kpi-value">{{ kpis.satisfaction }}</div>
+                    <div class="kpi-label">Satisfação Geral</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 chart-container">
+                <h5>Evolução do Engajamento</h5>
+                <canvas id="engagementChart"></canvas>
+            </div>
+            <div class="col-md-6 chart-container">
+                <h5>Atividades Entregues</h5>
+                <canvas id="activitiesChart"></canvas>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 chart-container">
+                <h5>Radar de Motivações (Octalysis)</h5>
+                <canvas id="motivationRadar" style="max-height: 500px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1 - Evolução do Engajamento
+            new Chart(document.getElementById('engagementChart'), {
+                type: 'line',
+                data: {
+                    labels: {{ engagement_labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Taxa de Engajamento (%)',
+                        data: {{ engagement_data|json_encode|raw }},
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Chart 2 - Atividades Entregues
+            new Chart(document.getElementById('activitiesChart'), {
+                type: 'bar',
+                data: {
+                    labels: {{ activities_labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Atividades',
+                        data: {{ activities_data|json_encode|raw }},
+                        backgroundColor: 'rgb(54, 162, 235)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Chart 3 - Radar de Motivações
+            new Chart(document.getElementById('motivationRadar'), {
+                type: 'radar',
+                data: {
+                    labels: {{ motivation_labels|json_encode|raw }},
+                    datasets: [{
+                        label: 'Motivações',
+                        data: {{ motivation_data|json_encode|raw }},
+                        fill: true,
+                        backgroundColor: 'rgba(75,192,192,0.2)',
+                        borderColor: 'rgb(75,192,192)',
+                        pointBackgroundColor: 'rgb(75,192,192)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
