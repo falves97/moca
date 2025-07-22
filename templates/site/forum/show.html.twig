@@ -1,0 +1,95 @@
+{% extends 'site/base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | {{ forum.title }}
+{% endblock %}
+
+{% block body %}
+<div class="page-header d-print-none" aria-label="Page header">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <h2 class="page-title">
+                    {{ forum.title }}
+                </h2>
+            </div>
+            <div class="col-auto ms-auto d-print-none">
+                {% if is_granted('ROLE_USER') and forum.author == app.user %}
+                    <a href="{{ path('site_forum_edit', {'id': forum.id}) }}" class="btn btn-primary">
+                        Editar Fórum
+                    </a>
+                {% endif %}
+                <a href="{{ path('site_forum') }}" class="btn btn-secondary">
+                    Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-body">
+    <div class="container-xl">
+        <div class="row row-cards">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-1">
+                            {{ forum.title }}
+                        </h3>
+                        <div class="text-secondary">
+                            {{ forum.content|raw }}
+                        </div>
+                        <div class="mt-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-auto">
+                                    {{ forum.comments|length }} Comentários
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h4>Comentários</h4>
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('site_forum_comment_create', {'forumId': forum.id}) }}"
+                                   class="btn btn-primary mb-3">Adicionar Comentário</a>
+                            {% endif %}
+                            {% for comment in forum.comments %}
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        {% if comment.parent %}
+                                            <div class="mb-1">
+                                                <label class="form-label">Resposta ao comentário:</label>
+                                                <div class="trix-content bg-light p-3">
+                                                    {{ comment.parent.content|raw }}
+                                                </div>
+                                            </div>
+
+                                        {% endif %}
+
+                                        <div class="mb-1">{{ comment.content|raw }}</div>
+                                        <small class="text-muted">
+                                            Postado por {{ comment.author.fullname }}
+                                        </small>
+                                        <div class="mt-2">
+                                            <a href="{{ path('site_forum_comment_create', {'forumId': forum.id, 'parentId': comment.id}) }}"
+                                               class="btn btn-primary btn-sm">Responder</a>
+                                            {% if is_granted('ROLE_USER') and comment.author == app.user %}
+                                                <a href="#"
+                                                   class="btn btn-secondary btn-sm">Editar</a>
+                                                <a href="#"
+                                                   class="btn btn-danger btn-sm">Excluir</a>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <span class="fw-bold">Sem Comentários!</span> Não há comentários neste fórum.
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+

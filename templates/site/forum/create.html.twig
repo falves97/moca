@@ -1,0 +1,42 @@
+{% extends 'site/base.html.twig' %}
+
+{% form_theme form with ['bootstrap_5_layout.html.twig', 'form/theme.html.twig'] %}
+
+{% block title %}
+    {{ parent() }} | Criar Fórum
+{% endblock %}
+
+{% block body %}
+    <div class="page-header d-print-none" aria-label="Page header">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        Criar Fórum
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            {{ form_start(form) }}
+                            {{ form_row(form.title) }}
+                            {{ form_row(form.content) }}
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('site_forum') }}" class="btn btn-secondary">Voltar</a>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
