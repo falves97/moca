@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Entity\Forum;
 use App\Entity\MultipleChoiceResponse;
 use App\Entity\QuizResponse;
 use App\Entity\Student;
 use App\Entity\SubjetiveResponse;
+use App\Form\CommentType;
+use App\Form\ForumType;
 use App\Form\QuizResponseType;
 use App\Repository\DisciplineRepository;
+use App\Repository\ForumRepository;
 use App\Repository\LessonRepository;
 use App\Repository\QuizRepository;
 use App\Repository\StudentRepository;
@@ -326,18 +331,23 @@ final class SiteController extends AbstractController
         $students = $repository->findAll();
         $studentsPoints = [];
 
-        usort($students, function (Student $a, Student $b) use (&$studentsPoints) {
-            $fnReduce = static function (int $aPoints, QuizResponse $quizResponse) {
-                $subjectivePoints = $quizResponse->getSubjetiveResponses()->reduce(static function (int $subjectivePoints, SubjetiveResponse $subjetiveResponse) {
-                    return $subjectivePoints + ($subjetiveResponse->getPoints() ?? 0);
-                }, 0);
-                $multipleChoicePoints = $quizResponse->getMultipleChoiceResponses()->reduce(static function (int $multipleChoicePoints, MultipleChoiceResponse $multipleChoiceResponse) {
-                    return $multipleChoicePoints + ($multipleChoiceResponse->getPoints() ?? 0);
-                }, 0);
+        $fnReduce = static function (int $aPoints, QuizResponse $quizResponse) {
+            $subjectivePoints = $quizResponse->getSubjetiveResponses()->reduce(static function (int $subjectivePoints, SubjetiveResponse $subjetiveResponse) {
+                return $subjectivePoints + ($subjetiveResponse->getPoints() ?? 0);
+            }, 0);
+            $multipleChoicePoints = $quizResponse->getMultipleChoiceResponses()->reduce(static function (int $multipleChoicePoints, MultipleChoiceResponse $multipleChoiceResponse) {
+                return $multipleChoicePoints + ($multipleChoiceResponse->getPoints() ?? 0);
+            }, 0);
 
-                return $aPoints + $subjectivePoints + $multipleChoicePoints;
-            };
+            return $aPoints + $subjectivePoints + $multipleChoicePoints;
+        };
 
+        if (1 === count($students)) {
+            $aPoints = $students[0]->getQuizResponses()->reduce($fnReduce, 0);
+            $studentsPoints[$students[0]->getId()] = $aPoints;
+        }
+
+        usort($students, function (Student $a, Student $b) use (&$studentsPoints, $fnReduce) {
             $aPoints = $a->getQuizResponses()->reduce($fnReduce, 0);
 
             $bPoints = $b->getQuizResponses()->reduce($fnReduce, 0);
@@ -350,6 +360,186 @@ final class SiteController extends AbstractController
         return $this->render('site/ranking.html.twig', [
             'students' => $students,
             'studentsPoints' => $studentsPoints,
+        ]);
+    }
+
+    #[Route('/forum', name: 'forum', methods: ['GET'])]
+    public function forum(ForumRepository $repository, Request $request): Response
+    {
+        $forums = new Pagerfanta(new QueryAdapter($repository->findAllPaginatedQueryBuilder()));
+        $forums->setMaxPerPage(10);
+        $forums->setCurrentPage($request->query->get('page', 1));
+
+        return $this->render('site/forum/index.html.twig', [
+            'forums' => $forums,
+        ]);
+    }
+
+    #[Route('/forum/create', name: 'forum_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function forumCreate(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $forum = new Forum();
+        $form = $this->createForm(ForumType::class, $forum);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Student $user */
+            $user = $this->getUser();
+            if (!$user) {
+                $this->addFlash('error', 'Você precisa estar logado para criar um tópico no fórum.');
+
+                return $this->redirectToRoute('site_forum');
+            }
+
+            $forum->setAuthor($user);
+            $entityManager->persist($forum);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Tópico criado com sucesso!');
+
+            return $this->redirectToRoute('site_forum_show', ['id' => $forum->getId()]);
+        }
+
+        return $this->render('site/forum/create.html.twig', [
+            'form' => $form,
+            'forum' => $forum,
+        ]);
+    }
+
+    #[Route('/forum/{id<\d+>}', name: 'forum_show', methods: ['GET'])]
+    public function forumShow(ForumRepository $repository, int $id): Response
+    {
+        $forum = $repository->find($id);
+
+        if (!$forum) {
+            throw $this->createNotFoundException('Fórum não encontrado');
+        }
+
+        $commentForm = $this->createForm(CommentType::class, new Comment());
+
+        return $this->render('site/forum/show.html.twig', [
+            'forum' => $forum,
+            'commentForm' => $commentForm,
+        ]);
+    }
+
+    #[Route('/forum/{id<\d+>}/edit', name: 'forum_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function forumEdit(Request $request, ForumRepository $repository, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $forum = $repository->find($id);
+
+        if (!$forum) {
+            throw $this->createNotFoundException('Fórum não encontrado');
+        }
+
+        // Check if the user is the author of the forum post
+        /** @var Student $user */
+        $user = $this->getUser();
+        if ($user !== $forum->getAuthor()) {
+            $this->addFlash('error', 'Você não tem permissão para editar este tópico.');
+
+            return $this->redirectToRoute('site_forum_show', ['id' => $forum->getId()]);
+        }
+
+        $form = $this->createForm(ForumType::class, $forum);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($forum);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Tópico atualizado com sucesso!');
+
+            return $this->redirectToRoute('site_forum_show', ['id' => $forum->getId()]);
+        }
+
+        return $this->render('site/forum/create.html.twig', [
+            'form' => $form,
+            'forum' => $forum,
+        ]);
+    }
+
+    #[Route('/forum/{id<\d+>}/delete', name: 'forum_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function forumDelete(Request $request, ForumRepository $repository, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $forum = $repository->find($id);
+
+        if (!$forum) {
+            throw $this->createNotFoundException('Fórum não encontrado');
+        }
+
+        // Check if the user is the author of the forum post
+        /** @var Student $user */
+        $user = $this->getUser();
+        if ($user !== $forum->getAuthor()) {
+            $this->addFlash('error', 'Você não tem permissão para excluir este tópico.');
+
+            return $this->redirectToRoute('site_forum_show', ['id' => $forum->getId()]);
+        }
+
+        if ($request->isMethod('POST')) {
+            $entityManager->remove($forum);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Tópico excluído com sucesso!');
+        }
+
+        return $this->redirectToRoute('site_forum');
+    }
+
+    #[Route('/forum/{forumId<\d+>}/comment', name: 'forum_comment_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_STUDENT')]
+    public function forumCommentCreate(Request $request, ForumRepository $forumRepository, int $forumId, EntityManagerInterface $entityManager): Response
+    {
+        $forum = $forumRepository->find($forumId);
+
+        if (!$forum) {
+            throw $this->createNotFoundException('Fórum não encontrado');
+        }
+
+        /** @var Student $user */
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Você precisa estar logado para comentar neste tópico.');
+
+            return $this->redirectToRoute('site_forum_show', ['id' => $forum->getId()]);
+        }
+
+        $parentId = $request->query->get('parentId');
+
+        if ($parentId) {
+            $parentComment = $entityManager->getRepository(Comment::class)->find($parentId);
+            if (!$parentComment || $parentComment->getForum() !== $forum) {
+                throw $this->createNotFoundException('Comentário pai não encontrado ou não pertence a este fórum');
+            }
+        }
+
+        $comment = new Comment();
+        $comment->setAuthor($user);
+        $comment->setForum($forum);
+        if ($parentId) {
+            $comment->setParent($parentComment);
+        }
+
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Comentário adicionado com sucesso!');
+
+            return $this->redirectToRoute('site_forum_show', ['id' => $forum->getId()]);
+        }
+
+        return $this->render('site/forum/comment_create.html.twig', [
+            'form' => $form,
+            'forum' => $forum,
         ]);
     }
 }
