@@ -66,7 +66,12 @@
 
                                         <div class="mb-1">{{ comment.content|raw }}</div>
                                         <small class="text-muted">
-                                            Postado por {{ comment.author.fullname }}
+                                            Postado por
+                                            {% if comment.author %}
+                                                {{ comment.author.username }} - Aluno
+                                            {% elseif comment.professor %}
+                                                {{ comment.professor.username }} - Professor
+                                            {% endif %}
                                         </small>
                                         <div class="mt-2">
                                             <a href="{{ path('site_forum_comment_create', {'forumId': forum.id, 'parentId': comment.id}) }}"

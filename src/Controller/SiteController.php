@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Forum;
 use App\Entity\MultipleChoiceResponse;
+use App\Entity\Professor;
 use App\Entity\QuizResponse;
 use App\Entity\Student;
 use App\Entity\SubjetiveResponse;
@@ -95,7 +96,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/lesson/{id<\d+>}', name: 'lesson_show', methods: ['GET'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function lessonShow(LessonRepository $repository, int $id): Response
     {
         $lesson = $repository->find($id);
@@ -129,7 +130,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/enroll/{discipline<\d+>}', name: 'enroll', methods: ['POST'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function enroll(DisciplineRepository $repository, int $discipline, EntityManagerInterface $entityManager): Response
     {
         $discipline = $repository->find($discipline);
@@ -296,7 +297,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/lesson/{id<\d+>}/complete', name: 'lesson_complete', methods: ['POST'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function lessonComplete(LessonRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $lesson = $repository->find($id);
@@ -376,7 +377,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/create', name: 'forum_create', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function forumCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $forum = new Forum();
@@ -426,7 +427,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/{id<\d+>}/edit', name: 'forum_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function forumEdit(Request $request, ForumRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $forum = $repository->find($id);
@@ -463,7 +464,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/{id<\d+>}/delete', name: 'forum_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function forumDelete(Request $request, ForumRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $forum = $repository->find($id);
@@ -492,7 +493,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/{forumId<\d+>}/comment', name: 'forum_comment_create', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_STUDENT')]
+    #[IsGranted('ROLE_PROFESSOR')]
     public function forumCommentCreate(Request $request, ForumRepository $forumRepository, int $forumId, EntityManagerInterface $entityManager): Response
     {
         $forum = $forumRepository->find($forumId);
@@ -519,7 +520,12 @@ final class SiteController extends AbstractController
         }
 
         $comment = new Comment();
-        $comment->setAuthor($user);
+        if ($user instanceof Professor) {
+            $comment->setProfessor($user);
+        } elseif ($user instanceof Student) {
+            $comment->setAuthor($user);
+        }
+
         $comment->setForum($forum);
         if ($parentId) {
             $comment->setParent($parentComment);
