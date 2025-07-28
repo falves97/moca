@@ -12,6 +12,10 @@ security:
         app_student_provider:
             entity:
                 class: App\Entity\Student
+        
+        app_all_users_provider:
+            chain:
+                providers: [app_professor_provider, app_student_provider]
     
     firewalls:
         dev:
@@ -33,7 +37,7 @@ security:
         main:
             pattern: ^/
             lazy: true
-            provider: app_student_provider
+            provider: app_all_users_provider
             form_login:
                 login_path: 'app_login'
                 check_path: 'app_login'

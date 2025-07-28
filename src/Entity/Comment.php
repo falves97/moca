@@ -26,6 +26,9 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Student $author = null;
 
+    #[ORM\ManyToOne(inversedBy: 'comments')]
+    private ?Professor $professor = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Comment
     public function setAuthor(?Student $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getProfessor(): ?Professor
+    {
+        return $this->professor;
+    }
+
+    public function setProfessor(?Professor $professor): static
+    {
+        $this->professor = $professor;
 
         return $this;
     }
