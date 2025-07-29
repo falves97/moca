@@ -7,4 +7,6 @@ import './bootstrap.js';
  */
 import '@tabler/core';
 import '@tabler/core/dist/css/tabler.min.css';
+import 'trix';
+import 'trix/dist/trix.min.css';
 import './styles/app.css';

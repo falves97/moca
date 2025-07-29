@@ -42,6 +42,13 @@ class MenuBuilder
             'labelAttributes' => ['class' => 'nav-link'],
             'extras' => ['icon' => 'tabler:chart-bar'],
         ]);
+        $menu->addChild('Forum', [
+            'route' => 'site_forum',
+            'attributes' => ['class' => 'nav-item'],
+            'linkAttributes' => ['class' => 'nav-link'],
+            'labelAttributes' => ['class' => 'nav-link'],
+            'extras' => ['icon' => 'tabler:message-circle'],
+        ]);
 
         return $menu;
     }

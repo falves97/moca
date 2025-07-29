@@ -1,0 +1,48 @@
+{% extends 'site/base.html.twig' %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Criar Comentário
+{% endblock %}
+
+{% block body %}
+    <div class="page-header d-print-none" aria-label="Page header">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        Criar Comentário
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            {{ form_start(form) }}
+                            <div class="mb-3">
+                                {% if form.vars.value.parent %}
+                                    <label class="form-label">Resposta ao comentário:</label>
+                                    <div class="trix-content bg-light p-3">
+                                        {{ form.vars.value.parent.content|raw }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {{ form_row(form.content) }}
+                            <button type="submit" class="btn btn-primary">Criar Comentário</button>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
