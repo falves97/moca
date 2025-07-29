@@ -96,7 +96,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/lesson/{id<\d+>}', name: 'lesson_show', methods: ['GET'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function lessonShow(LessonRepository $repository, int $id): Response
     {
         $lesson = $repository->find($id);
@@ -130,7 +130,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/enroll/{discipline<\d+>}', name: 'enroll', methods: ['POST'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function enroll(DisciplineRepository $repository, int $discipline, EntityManagerInterface $entityManager): Response
     {
         $discipline = $repository->find($discipline);
@@ -297,7 +297,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/lesson/{id<\d+>}/complete', name: 'lesson_complete', methods: ['POST'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function lessonComplete(LessonRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $lesson = $repository->find($id);
@@ -377,7 +377,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/create', name: 'forum_create', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function forumCreate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $forum = new Forum();
@@ -427,7 +427,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/{id<\d+>}/edit', name: 'forum_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function forumEdit(Request $request, ForumRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $forum = $repository->find($id);
@@ -464,7 +464,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/{id<\d+>}/delete', name: 'forum_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function forumDelete(Request $request, ForumRepository $repository, int $id, EntityManagerInterface $entityManager): Response
     {
         $forum = $repository->find($id);
@@ -493,7 +493,7 @@ final class SiteController extends AbstractController
     }
 
     #[Route('/forum/{forumId<\d+>}/comment', name: 'forum_comment_create', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_PROFESSOR')]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function forumCommentCreate(Request $request, ForumRepository $forumRepository, int $forumId, EntityManagerInterface $entityManager): Response
     {
         $forum = $forumRepository->find($forumId);

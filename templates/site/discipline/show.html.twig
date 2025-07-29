@@ -70,7 +70,7 @@
                                                                         {{ ux_icon('tabler:book', {class: 'icon me-2'}) }}
                                                                         <span>{{ lesson.name }}</span>
                                                                     </div>
-                                                                    {% if lesson in app.user.lessons %}
+                                                                    {% if app.user and lesson in app.user.lessons %}
                                                                         <div>
                                                                             <span
                                                                                 class="badge badge-lg rounded-pill badge-icononly text-bg-primary">
